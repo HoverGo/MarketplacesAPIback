@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     # Rest
     "rest_framework",
     "rest_framework.authtoken",
-    "rest_framework_simplejwt"
+    "rest_framework_simplejwt",
+    # cors
+    "corsheaders",
     # local
     "user",
 ]
@@ -53,7 +55,19 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "EXCEPTION_HANDLER": "MarketplacesBack.exceptions.core_exception_handler",
+    "NON_FIELD_ERRORS_KEY": "error",
+}
 
 ROOT_URLCONF = "MarketplacesBack.urls"
 
@@ -109,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru-RU"
 
 TIME_ZONE = "UTC"
 
@@ -129,15 +143,3 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "user.User"
-
-
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-    "EXCEPTION_HANDLER": "GSbackend.exceptions.core_exception_handler",
-    "NON_FIELD_ERRORS_KEY": "error",
-}

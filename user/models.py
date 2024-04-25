@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
-from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
+from django.core.validators import RegexValidator
 
 
 class UserManager(BaseUserManager):
@@ -39,11 +39,13 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(
         max_length=100,
-        validator=RegexValidator(
-            regex=r"^[а-яА-ЯёЁa-zA-Z]+\s[а-яА-ЯёЁa-zA-Z]+\s[а-яА-ЯёЁa-zA-Z]+$",
-            message=("Invalid full name"),
-            code="invalid_full_name",
-        ),
+        validators=[
+            RegexValidator(
+                regex=r"^[а-яА-ЯёЁa-zA-Z]+\s[а-яА-ЯёЁa-zA-Z]+\s[а-яА-ЯёЁa-zA-Z]+$",
+                message=("Invalid full name"),
+                code="invalid_full_name",
+            )
+        ],
     )
     password = models.CharField(
         max_length=250,
@@ -56,12 +58,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         ],
     )
     email = models.EmailField(unique=True, max_length=100)
-    phone = models.PhoneNumberField(unique=True)
+    phone = models.CharField(
+        validators=[RegexValidator(regex=r"^1?\d{9,15}$")],
+        max_length=20,
+        unique=True,
+    )
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["name", "phone"]
+    USERNAME_FIELD = "phone"
+    REQUIRED_FIELDS = ["name", "email"]
 
     objects = UserManager()
 

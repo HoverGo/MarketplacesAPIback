@@ -1,4 +1,8 @@
 from django.contrib import admin
 from django.urls import path
+from .views import RegistrationView
 
-urlpatterns = [path("login")]
+
+urlpatterns = [
+    path("registration/", RegistrationView.as_view()),
+]
